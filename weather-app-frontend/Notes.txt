@@ -1,0 +1,13 @@
+
+npm create vite@latest weather-app-frontend -- --template react-ts
+
+cd weather-app-frontend
+
+npm install
+
+npm run dev
+
+
+npm install -D tailwindcss postcss autoprefixer
+
+npx tailwindcss init -p

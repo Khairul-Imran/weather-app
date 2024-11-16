@@ -9,12 +9,12 @@ function WeatherDetails({ details }: WeatherDetailsProps) {
 
     return(
         <div>
-            {details.temperature}
-            {details.wind}
-            {details.humidity}
-            {details.feelsLike}
-            {details.description}
-            {details.lastUpdate}
+            Temperature: {details.temperature}
+            Wind: {details.wind}
+            Humidity: {details.humidity}
+            Feels Like: {details.feelsLike}
+            Description: {details.description}
+            Last Updated: {details.lastUpdate}
         </div>
     );
 }

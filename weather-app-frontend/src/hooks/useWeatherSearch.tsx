@@ -17,6 +17,8 @@ export function useWeatherSearch() : UseWeatherSearchResult {
     const [error, setError] = useState<string | null>(null); // Store any errors
 
     const searchWeather = useCallback(async (location: string) => {
+        console.log("useWeatherSearch: Searching for location: ", location);
+
         if (!location.trim()) {
             setError("Please enter a location!");
             return;
@@ -28,8 +30,10 @@ export function useWeatherSearch() : UseWeatherSearchResult {
         try {
             // Make the api call
             const data = await weatherDataApi.getWeather(location);
+            console.log("useWeatherSearch: Receivd data: ", data);
             setWeatherData(data);
         } catch (err) {
+            console.error("useWeatherSearch: Error: ", err);
             setError(err instanceof Error ? err.message : "An error occurred.");
         } finally {
             setIsLoading(false);

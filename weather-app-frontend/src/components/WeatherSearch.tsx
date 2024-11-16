@@ -6,10 +6,10 @@ interface WeatherSearchProps {
 
 function WeatherSearch({ onSearch }: WeatherSearchProps) {
     const [searchTerm, setSearchTerm] = useState("");
-    // TODO
+    // TODO later
     // const [errors, setErrors] = useState({ text: "" });
 
-    // TODO
+    // TODO later
     // const validateField = (value: string) => {
 
     // }
@@ -18,20 +18,12 @@ function WeatherSearch({ onSearch }: WeatherSearchProps) {
 
     // }
 
-    // function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    //     e.preventDefault();
-
-    //     // To validate the field
-
-    //     // Only submit if no errors
-    //     if (searchTerm.trim()) {
-    //         onSearch(searchTerm.trim());
-    //     }
-    // }
-
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        await onSearch(searchTerm);
+        console.log("Form submitted with location: ", searchTerm);
+        if (searchTerm.trim()) {
+            await onSearch(searchTerm.trim());
+        }
     };
 
     function clearSearch() {

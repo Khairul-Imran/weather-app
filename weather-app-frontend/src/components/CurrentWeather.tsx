@@ -15,9 +15,9 @@ function CurrentWeather({ data }: SearchProps) {
     return(
         <div className="mt-8">
             <div>
-                {data.location.country}
-                {data.location.name}
-                {data.location.region}
+                Country: {data.location.country}
+                Name: {data.location.name}
+                Region: {data.location.region}
             </div>
             <WeatherIcon icon={weatherIcon} />
             <WeatherDetails details={weatherDetails} />

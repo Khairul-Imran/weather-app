@@ -1,4 +1,10 @@
-function WeatherDetails() {
+import { CurrentWeather } from "../types/weatherData";
+
+interface WeatherDetailsProps {
+    details: CurrentWeather
+}
+
+function WeatherDetails({ details }: WeatherDetailsProps) {
 
 
     return(

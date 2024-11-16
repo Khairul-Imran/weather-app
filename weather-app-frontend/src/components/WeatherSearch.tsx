@@ -1,12 +1,13 @@
 import { useState } from "react";
 
 interface WeatherSearchProps {
-    onSearchLocation: (text: string) => void;
+    onSearch: (location: string) => Promise<void>;
 }
 
-function WeatherSearch({ onSearchLocation }: WeatherSearchProps) {
-    const [text, setText] = useState("");
-    const [errors, setErrors] = useState({ text: "" }); // TODO
+function WeatherSearch({ onSearch }: WeatherSearchProps) {
+    const [searchTerm, setSearchTerm] = useState("");
+    // TODO
+    // const [errors, setErrors] = useState({ text: "" });
 
     // TODO
     // const validateField = (value: string) => {
@@ -17,20 +18,24 @@ function WeatherSearch({ onSearchLocation }: WeatherSearchProps) {
 
     // }
 
-    function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    // function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    //     e.preventDefault();
+
+    //     // To validate the field
+
+    //     // Only submit if no errors
+    //     if (searchTerm.trim()) {
+    //         onSearch(searchTerm.trim());
+    //     }
+    // }
+
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-
-        // To validate the field
-
-        // Only submit if no errors
-        if (text.trim()) {
-            onSearchLocation(text.trim());
-            setText("");
-        }
-    }
+        await onSearch(searchTerm);
+    };
 
     function clearSearch() {
-        setText("");
+        setSearchTerm("");
     }
 
     return (
@@ -42,9 +47,10 @@ function WeatherSearch({ onSearchLocation }: WeatherSearchProps) {
                 <input
                     type="text"
                     name="text"
-                    value={text}
-                    onChange={(e) => setText(e.target.value)}
-                    placeholder="Search a region"
+                    value={searchTerm}
+                    // To change this when we add validation
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    placeholder="Search a location"
                     className="w-full px-4 py-2 border rounded focus:outline-none"
                 />
                 {/* To insert a "x" button to clear search */}

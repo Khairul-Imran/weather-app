@@ -13,6 +13,10 @@ npm install -D tailwindcss postcss autoprefixer
 npx tailwindcss init -p
 
 
+Want to make the search better:
+- Have search recommendations based on country typed or something maybe
+
+
 Potential enhancements:
 WeatherMap - If you want to add a map view
 LocationButton - Get user's current location

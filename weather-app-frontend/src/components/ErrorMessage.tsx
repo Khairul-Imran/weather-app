@@ -1,4 +1,8 @@
-function ErrorMessage() {
+interface errorMessageProps {
+    message: string
+};
+
+function ErrorMessage({ message }: errorMessageProps) {
 
 
     return(

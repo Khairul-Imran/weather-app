@@ -4,6 +4,7 @@ import ErrorMessage from "./ErrorMessage";
 import LoadingSpinner from "./LoadingSpinner";
 import WeatherHeader from "./WeatherHeader";
 import WeatherSearch from "./WeatherSearch";
+import { useWeatherSearch } from "../hooks/useWeatherSearch";
 
 function WeatherDashboard() {
 
@@ -14,12 +15,14 @@ function WeatherDashboard() {
         return previousSearch ? JSON.parse(previousSearch) : "";
     });
 
-    const searchLocation = (text: string) => {
-        setSearch(text);
+    const { weatherData, isLoading, error, searchWeather } = useWeatherSearch();
 
-        // The api call should happen here.
+    // const searchLocation = (text: string) => {
+    //     setSearch(text);
 
-    }
+    //     // The api call should happen here.
+
+    // }
 
     // Save the previous search in localStorage
     // Not sure if I should use this to store search history or not. Currently this only stores the most recent search.
@@ -30,11 +33,13 @@ function WeatherDashboard() {
     return(
         <div className="container mx-auto px-4 py-8">
             <WeatherHeader />
-            <WeatherSearch onSearchLocation={searchLocation} />
+            <WeatherSearch onSearch={searchWeather} />
+
             {/* Conditionally render these based on state */}
-            <LoadingSpinner />
-            <ErrorMessage />
-            <CurrentWeather search={search} />
+            {isLoading && <LoadingSpinner />}
+            {error && <ErrorMessage message={error} />}
+            {weatherData && <CurrentWeather data={weatherData} />}
+            
         </div>
     );
 }

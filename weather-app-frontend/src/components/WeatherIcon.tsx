@@ -1,4 +1,8 @@
-function WeatherIcon() {
+interface WeatherIconProps {
+    icon: string
+}
+
+function WeatherIcon({ icon }: WeatherIconProps) {
 
 
     return(

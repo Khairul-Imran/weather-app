@@ -1,19 +1,26 @@
+import { WeatherData } from "../services/api/weatherDataApi";
 import WeatherDetails from "./WeatherDetails";
 import WeatherIcon from "./WeatherIcon";
 
 interface SearchProps {
-    search: string;
+    data: WeatherData;
 }
 
-function CurrentWeather({ search }: SearchProps) {
+function CurrentWeather({ data }: SearchProps) {
 
-    
+    const weatherDetails = data.current;
+
+    const weatherIcon = data.current.icon;
 
     return(
         <div className="mt-8">
-            <div>{/* Location info */}</div>
-            <WeatherIcon />
-            <WeatherDetails />
+            <div>
+                {data.location.country}
+                {data.location.name}
+                {data.location.region}
+            </div>
+            <WeatherIcon icon={weatherIcon} />
+            <WeatherDetails details={weatherDetails} />
         </div>
     );
 }

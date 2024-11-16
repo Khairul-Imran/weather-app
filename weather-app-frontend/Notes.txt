@@ -11,3 +11,10 @@ npm run dev
 npm install -D tailwindcss postcss autoprefixer
 
 npx tailwindcss init -p
+
+
+Potential enhancements:
+WeatherMap - If you want to add a map view
+LocationButton - Get user's current location
+RecentSearches - List of recently searched locations
+WeatherDetails - Expanded weather information (humidity, wind, pressure, etc.) (Maybe not this)

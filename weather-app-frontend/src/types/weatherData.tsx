@@ -1,6 +1,6 @@
-export interface WeatherData {
+export interface WeatherResponse {
     location: Location,
-    current: Current
+    current: CurrentWeather
 };
 
 export interface Location {
@@ -9,7 +9,7 @@ export interface Location {
     country: string
 };
 
-export interface Current {
+export interface CurrentWeather {
     lastUpdate: string,
     temperature: number,
     wind: number,

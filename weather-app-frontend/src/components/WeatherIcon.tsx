@@ -6,7 +6,9 @@ function WeatherIcon({ icon }: WeatherIconProps) {
 
 
     return(
-        <div></div>
+        <div>
+            <p>{icon}</p>
+        </div>
     );
 }
 

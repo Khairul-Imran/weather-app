@@ -15,6 +15,8 @@ async function getWeather(searchTerm: string, signal?: AbortSignal): Promise<Wea
         signal
     });
 
+    console.log("Received response: ", response);
+
     return {
         location: response.location,
         current: response.current

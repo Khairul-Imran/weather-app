@@ -8,7 +8,14 @@ function WeatherDetails({ details }: WeatherDetailsProps) {
 
 
     return(
-        <div></div>
+        <div>
+            {details.temperature}
+            {details.wind}
+            {details.humidity}
+            {details.feelsLike}
+            {details.description}
+            {details.lastUpdate}
+        </div>
     );
 }
 

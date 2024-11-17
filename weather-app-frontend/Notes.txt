@@ -13,19 +13,51 @@ npm install -D tailwindcss postcss autoprefixer
 npx tailwindcss init -p
 
 
-Want to make the search better:
-- Have search recommendations based on country typed or something maybe
+
+-----------------------------------------------------------------------------------------------------------
+
+1. Want to make the search better:
+- Search validation stuff (do this first)
+    - Validate input format (e.g., no special characters)
+    - Show helpful error messages
+    - Handle different types of API errors gracefully (how to do this?)
+    - Provide feedback about invalid locations
 
 
-Potential enhancements:
-WeatherMap - If you want to add a map view
+- Autocomplete/Search Suggestions
+    - Create an endpoint in your backend that returns city suggestions based on partial input
+    - Use debouncing to prevent too many API calls while typing
+    - Show suggestions in a dropdown below the search input
+    - Allow keyboard navigation (up/down arrows) through suggestions
+    - Allow clicking on suggestions to select them
 
-LocationButton - Get user's current location
+Considerations:
+- How many suggestions to show?
+- When to start showing suggestions (e.g., after 2 characters)?
+- How to handle loading states during suggestion fetching?
 
-RecentSearches - List of recently searched locations (or just better search functionality)
 
-Allow users to save some locations
+
+2. Allow users to save some locations (favourites) -> maybe use context
 - Maybe save some as favourites, which would then display somewhere like a header
 - Then they would display the updated weather data on a smaller card
 
-Add forecast data
+
+3. Add forecast data
+
+
+4. WeatherMap - If you want to add a map view
+
+
+5. LocationButton - Get user's current location
+
+
+6. Popular / Featured locations
+- Create a list of common cities
+- Show them when input is focused but empty
+- Allow quick selection
+
+Considerations:
+How to determine what's "popular"?
+How to organize them (by country, continent, etc.)?
+-> Perhaps organise based on user's location -> what's nearby

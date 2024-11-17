@@ -23,6 +23,10 @@ npx tailwindcss init -p
     - Handle different types of API errors gracefully (how to do this?)
     - Provide feedback about invalid locations
 
+    - Need to ensure validation is working correctly.
+    - Currently submitting an empty input doesn't show the prompt
+    - Try to implement something similar to what was done for todolist
+
 
 - Autocomplete/Search Suggestions
     - Create an endpoint in your backend that returns city suggestions based on partial input

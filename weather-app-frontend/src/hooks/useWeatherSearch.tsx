@@ -30,7 +30,7 @@ export function useWeatherSearch() : UseWeatherSearchResult {
         try {
             // Make the api call
             const data = await weatherDataApi.getWeather(location);
-            console.log("useWeatherSearch: Receivd data: ", data);
+            console.log("useWeatherSearch: Received data: ", data);
             setWeatherData(data);
         } catch (err) {
             console.error("useWeatherSearch: Error: ", err);

@@ -33,7 +33,7 @@ function WeatherDashboard() {
     return(
         <div className="container mx-auto px-4 py-8">
             <WeatherHeader />
-            <WeatherSearch onSearch={handleSearch} />s
+            <WeatherSearch onSearch={handleSearch} />
 
             {/* Conditionally render these based on state */}
             {isLoading && <LoadingSpinner />}

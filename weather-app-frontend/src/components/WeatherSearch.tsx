@@ -32,7 +32,7 @@ function WeatherSearch({ onSearch }: WeatherSearchProps) {
     }
 
     return (
-        <div className="max-w-2xl mx-auto px-4">
+        <div className="max-w-2xl mx-auto">
             <form
                 onSubmit={handleSubmit}
                 className="bg-white p-6 rounded-lg shadow-md"

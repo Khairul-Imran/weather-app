@@ -19,6 +19,13 @@ Want to make the search better:
 
 Potential enhancements:
 WeatherMap - If you want to add a map view
+
 LocationButton - Get user's current location
-RecentSearches - List of recently searched locations
-WeatherDetails - Expanded weather information (humidity, wind, pressure, etc.) (Maybe not this)
+
+RecentSearches - List of recently searched locations (or just better search functionality)
+
+Allow users to save some locations
+- Maybe save some as favourites, which would then display somewhere like a header
+- Then they would display the updated weather data on a smaller card
+
+Add forecast data

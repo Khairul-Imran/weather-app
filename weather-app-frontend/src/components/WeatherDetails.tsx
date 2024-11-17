@@ -1,20 +1,49 @@
 import { CurrentWeather } from "../types/weatherData";
 
 interface WeatherDetailsProps {
-    details: CurrentWeather
+    details: CurrentWeather;
 }
 
 function WeatherDetails({ details }: WeatherDetailsProps) {
+    const stats = [
+        {
+            label: "Feels Like",
+            value: `${Math.round(details.feelsLike)}°C`,
+            icon: "🌡️",
+        },
+        {
+            label: "Wind",
+            value: `${details.wind} km/h`,
+            icon: "💨",
+        },
+        {
+            label: "Humidity",
+            value: `${details.humidity}%`,
+            icon: "💧",
+        },
+    ];
 
-
-    return(
+    return (
         <div>
-            Temperature: {details.temperature}
-            Wind: {details.wind}
-            Humidity: {details.humidity}
-            Feels Like: {details.feelsLike}
-            Description: {details.description}
-            Last Updated: {details.lastUpdate}
+            <div className="grid grid-cols-3 gap-4">
+                {stats.map((stat) => (
+                    <div
+                        key={stat.label}
+                        className="bg-gray-50 p-4 rounded-lg text-center"
+                    >
+                        <div className="text-xl mb-1">{stat.icon}</div>
+                        <div className="text-sm text-gray-500">
+                            {stat.label}
+                        </div>
+                        <div className="font-semibold text-gray-800">
+                            {stat.value}
+                        </div>
+                    </div>
+                ))}
+            </div>
+            <div className="mt-4 text-sm text-gray-500 text-center">
+                Last Updated: {details.lastUpdate} (Local Time)
+            </div>
         </div>
     );
 }

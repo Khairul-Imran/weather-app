@@ -9,6 +9,7 @@ interface UseWeatherSearchResult {
     searchWeather: (location: string) => Promise<void>;
 }
 
+// Custom hook
 // The way we are fetching data here is based on the user clicking search
 // This is not like the automatic fetches for the kanye quotes in todolist -> don't need abort controller, useEffect
 export function useWeatherSearch() : UseWeatherSearchResult {

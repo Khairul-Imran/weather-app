@@ -18,14 +18,13 @@ npx tailwindcss init -p
 
 1. Want to make the search better:
 - Search validation stuff (do this first)
-    - Validate input format (e.g., no special characters)
-    - Show helpful error messages
+    - Validate input format (e.g., no special characters) (Done)
+    (Do these next)
     - Handle different types of API errors gracefully (how to do this?)
     - Provide feedback about invalid locations
+    - Show helpful error messages
 
     - Need to ensure validation is working correctly.
-    - Currently submitting an empty input doesn't show the prompt
-    - Try to implement something similar to what was done for todolist
 
 
 - Autocomplete/Search Suggestions

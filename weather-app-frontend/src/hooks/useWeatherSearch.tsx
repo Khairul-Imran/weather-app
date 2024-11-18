@@ -20,6 +20,7 @@ export function useWeatherSearch() : UseWeatherSearchResult {
     const searchWeather = useCallback(async (location: string) => {
         console.log("useWeatherSearch: Searching for location: ", location);
 
+        // This doesn't seem to ever trigger
         if (!location.trim()) {
             setError("Please enter a location!");
             return;
@@ -34,6 +35,7 @@ export function useWeatherSearch() : UseWeatherSearchResult {
             console.log("useWeatherSearch: Received data: ", data);
             setWeatherData(data);
         } catch (err) {
+            // This is what we are seeing in the browser console
             console.error("useWeatherSearch: Error: ", err);
             setError(err instanceof Error ? err.message : "An error occurred.");
         } finally {

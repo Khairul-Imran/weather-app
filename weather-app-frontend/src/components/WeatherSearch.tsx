@@ -12,7 +12,6 @@ interface ValidationState {
 
 function WeatherSearch({ onSearch }: WeatherSearchProps) {
     const [searchTerm, setSearchTerm] = useState("");
-    // const [searchErrors, setSearchErrors] = useState({ text: "" });
     const [validation, setValidation] = useState<ValidationState>({
         text: "",
         isDirty: false,
@@ -60,9 +59,14 @@ function WeatherSearch({ onSearch }: WeatherSearchProps) {
     function handleBlur() {
         setValidation((prev) => ({
             ...prev,
-            isTouched: true,
+            isTouched: true, // Mark that user has interacted with and left the field **
+            // This allows us to have validation on blur (when the user leaves the field) -> This is more user-friendly as it waits until the user is done typing
         }));
     }
+    
+    // User starts typing → No validation messages yet
+    // User leaves field (blur) → Show validation message if there's an error
+    // User returns to field → Keep showing validation until fixed
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();

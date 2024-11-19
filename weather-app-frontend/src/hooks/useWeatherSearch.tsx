@@ -21,7 +21,6 @@ export function useWeatherSearch() : UseWeatherSearchResult {
     const searchWeather = useCallback(async (location: string) => {
         console.log("useWeatherSearch: Searching for location: ", location);
 
-        // This doesn't seem to ever trigger
         if (!location.trim()) {
             setError("Please enter a location!");
             return;
@@ -55,6 +54,7 @@ export function useWeatherSearch() : UseWeatherSearchResult {
                 setError("Unable to fetch weather data. Please try again later.");
             }
 
+            // Alternative way
             // if (err instanceof ApiError) {
             //     // Handle the different error codes (reference to WeatherApi docs)
             //     switch (err.code) {
@@ -79,7 +79,6 @@ export function useWeatherSearch() : UseWeatherSearchResult {
             // } else {
             //     setError("Unable to fetch weather data. Please try again later.");
             // }
-
 
         } finally {
             setIsLoading(false);

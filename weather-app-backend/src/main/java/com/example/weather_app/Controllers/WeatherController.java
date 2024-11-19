@@ -38,7 +38,6 @@ public class WeatherController {
             logger.info("Successfully retrieved weather data for location: {}", location);
             return ResponseEntity.ok(weatherData);
         } catch (HttpClientErrorException e) {
-            // logger.error("Error fetching weather data for location: {}", location, e);
             logger.error("HttpClientErrorException - Status: {}, Raw Response: {}", 
                 e.getStatusCode(), 
                 e.getResponseBodyAsString());
@@ -53,31 +52,19 @@ public class WeatherController {
                 return ResponseEntity
                     .status(e.getStatusCode())  // This will be 400 for invalid locations
                     .body(weatherApiError);     // This contains the code 1006 and message
-
-                // return ResponseEntity.status(e.getStatusCode()).body(weatherApiError);
             } catch (JsonProcessingException jpe) {
-
                 logger.error("Failed to parse weather API error response", e.getResponseBodyAsString(), jpe);
 
                 return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)  // Still use 400 as it's a client error
                     .body(new WeatherApiError(1006, "Failed to process location"));
-
-                // // If we can't parse the weather Api error, return a generic error
-                // return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new WeatherApiError(500, "An unexpected error occurred"));
             }
 
         } catch (Exception e) {
-
             logger.error("Unexpected error fetching weather data", e);
             return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(new WeatherApiError(500, "An unexpected server error occurred"));
-
-            // This was the original error that we were seeing
-            // return ResponseEntity
-            //     .status(HttpStatus.INTERNAL_SERVER_ERROR)
-            //     .body("Error fetching weather data: " + e.getMessage());
         }
     }
 }

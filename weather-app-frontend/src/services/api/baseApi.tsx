@@ -39,13 +39,6 @@ export async function apiClient<T>(endpoint: string = '', options: RequestInit =
         console.log('Response status:', response.status);
         console.log('Response headers:', response.headers);
 
-        // Old Error handling
-        // if (!response.ok) {
-        //     const errorText = await response.text();
-        //     console.error('Error response body:', errorText);
-        //     throw new Error(`API Error: ${response.status}, ${response.statusText}`);
-        // }
-
         if (!response.ok) {
             const errorData = await response.json();
             console.log('Error response:', errorData);

@@ -39,11 +39,15 @@ public class WeatherController {
             return ResponseEntity.ok(weatherData);
         } catch (HttpClientErrorException e) {
             // logger.error("Error fetching weather data for location: {}", location, e);
-            logger.error("Error fetching weather data for location: {}. Status: {}. Response: {}", location, e.getStatusCode(), e.getResponseBodyAsString());
+            logger.error("HttpClientErrorException - Status: {}, Raw Response: {}", 
+                e.getStatusCode(), 
+                e.getResponseBodyAsString());
 
             try {
                 // Parse the error from the weather API
                 WeatherApiError weatherApiError = new ObjectMapper().readValue(e.getResponseBodyAsString(), WeatherApiError.class);
+
+                logger.info("Successfully parsed error response into WeatherApiError: {}", weatherApiError);
 
                 // Important: Use the original status code from the weatherAPI (400)
                 return ResponseEntity
@@ -53,10 +57,11 @@ public class WeatherController {
                 // return ResponseEntity.status(e.getStatusCode()).body(weatherApiError);
             } catch (JsonProcessingException jpe) {
 
-                logger.error("Failed to parse weather API error response", jpe);
+                logger.error("Failed to parse weather API error response", e.getResponseBodyAsString(), jpe);
+
                 return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)  // Still use 400 as it's a client error
-                    .body(new WeatherApiError(1006, "Invalid location or parsing error"));
+                    .body(new WeatherApiError(1006, "Failed to process location"));
 
                 // // If we can't parse the weather Api error, return a generic error
                 // return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new WeatherApiError(500, "An unexpected error occurred"));

@@ -7,6 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -35,6 +36,7 @@ public class WeatherService {
     public WeatherData getWeatherForLocation(String location) throws WeatherServiceException {
         try {
             String url = buildUrl(location);
+            logger.info("Making request to Weather API: {}", url);
 
             RequestEntity<Void> request = RequestEntity
                 .get(url)
@@ -49,6 +51,11 @@ public class WeatherService {
                 logger.error("Error response from WeatherAPI. Status: {}", response.getStatusCode());
                 throw new WeatherServiceException("Failed to fetch weather data. Status: " + response.getStatusCode());
             }
+        } catch (HttpClientErrorException hcee) {
+            // Instead of wrapping in WeatherServiceException, rethrow the original exception
+            logger.error("Weather API client error: Status: {}, Response: {}", 
+                hcee.getStatusCode(), hcee.getResponseBodyAsString());
+            throw hcee;  // Important: Rethrow the original exception
         } catch (RestClientException e) {
             logger.error("Error fetching weather data for location: {}", location, e);
             throw new WeatherServiceException("Failed to fetch weather data", e);

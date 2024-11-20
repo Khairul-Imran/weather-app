@@ -71,6 +71,7 @@ public class WeatherService {
             .fromHttpUrl(config.getApiUrl())
             .queryParam("key", config.getApiKey())
             .queryParam("q", location)
+            .queryParam("days", 3) // new for forecast data
             .toUriString();
     }
 }

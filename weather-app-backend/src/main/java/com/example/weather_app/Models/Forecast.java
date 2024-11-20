@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Forecast {
     
+    // These 2 are probably not necessary. But i'll just take it incase.
     private String date;
     private int dateEpoch;
 

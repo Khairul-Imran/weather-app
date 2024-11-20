@@ -44,6 +44,9 @@ Considerations:
 
 
 3. Add forecast data (Do this next)
+- Do the parsing and service-related stuff on the backend (Done)
+- Work on displaying the data on the frontend
+- Make the UI look nice
 
 
 4. WeatherMap - If you want to add a map view

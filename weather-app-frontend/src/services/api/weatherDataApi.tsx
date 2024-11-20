@@ -1,14 +1,11 @@
-import { CurrentWeather, Location, WeatherResponse } from "../../types/weatherData";
+import { CurrentWeather, Forecast, Location, WeatherResponse } from "../../types/weatherData";
 import { apiClient } from "./baseApi";
-
-// export interface ApiResponse {
-//     weatherData: WeatherResponse;
-// }
 
 export interface WeatherData {
     location: Location;
     current: CurrentWeather;
-}
+    forecast: Forecast
+};
 
 async function getWeather(searchTerm: string, signal?: AbortSignal): Promise<WeatherData> {
     const response = await apiClient<WeatherResponse>(searchTerm, {
@@ -19,7 +16,8 @@ async function getWeather(searchTerm: string, signal?: AbortSignal): Promise<Wea
 
     return {
         location: response.location,
-        current: response.current
+        current: response.current,
+        forecast: response.forecast
     };
 }
 

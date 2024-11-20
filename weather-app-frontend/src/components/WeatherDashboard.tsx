@@ -46,6 +46,8 @@ function WeatherDashboard() {
             )}
 
             {weatherData && <CurrentWeather data={weatherData} />}
+            {weatherData && <WeatherForecastSection data={weatherData} />}
+
         </div>
     );
 }

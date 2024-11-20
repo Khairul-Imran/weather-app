@@ -40,11 +40,10 @@ public class WeatherDataParser {
             String description = parseDescription(jsonObject);
             String icon = parseIcon(jsonObject);
 
-            // Forecast data
-            Forecast forecastObject = parseForecast(jsonObject);
-
             Location locationObject = new Location(name, region, country);
             Current currentObject = new Current(lastUpdate, temperature, wind, humidity, feelsLike, description, icon);
+            // Forecast data
+            Forecast forecastObject = parseForecast(jsonObject);
 
             return new WeatherData(locationObject, currentObject, forecastObject);
         } catch (JsonException e) {

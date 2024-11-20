@@ -23,7 +23,7 @@ npx tailwindcss init -p
     - Provide feedback about invalid locations (Done)
     - Show helpful error messages (Done)
     - Need to ensure validation is working correctly. (Done)
-
+    - To go through and understand the flow of things for this. (TODO)
 
 - Autocomplete/Search Suggestions
     - Create an endpoint in your backend that returns city suggestions based on partial input

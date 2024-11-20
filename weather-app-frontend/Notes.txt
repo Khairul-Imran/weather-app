@@ -17,14 +17,12 @@ npx tailwindcss init -p
 -----------------------------------------------------------------------------------------------------------
 
 1. Want to make the search better:
-- Search validation stuff (do this first)
+- Search validation stuff
     - Validate input format (e.g., no special characters) (Done)
-    (Do these next)
-    - Handle different types of API errors gracefully (how to do this?)
-    - Provide feedback about invalid locations
-    - Show helpful error messages
-
-    - Need to ensure validation is working correctly.
+    - Handle different types of API errors gracefully (Done)
+    - Provide feedback about invalid locations (Done)
+    - Show helpful error messages (Done)
+    - Need to ensure validation is working correctly. (Done)
 
 
 - Autocomplete/Search Suggestions
@@ -40,13 +38,12 @@ Considerations:
 - How to handle loading states during suggestion fetching?
 
 
-
 2. Allow users to save some locations (favourites) -> maybe use context
 - Maybe save some as favourites, which would then display somewhere like a header
 - Then they would display the updated weather data on a smaller card
 
 
-3. Add forecast data
+3. Add forecast data (Do this next)
 
 
 4. WeatherMap - If you want to add a map view

@@ -4,6 +4,7 @@ import ErrorMessage from "./ErrorMessage";
 import LoadingSpinner from "./LoadingSpinner";
 import WeatherSearch from "./WeatherSearch";
 import { useWeatherSearch } from "../hooks/useWeatherSearch";
+import WeatherForecastSection from "./WeatherForecastSection";
 
 function WeatherDashboard() {
     // For now this is to just set the default based on the previous search
@@ -46,7 +47,7 @@ function WeatherDashboard() {
             )}
 
             {weatherData && <CurrentWeather data={weatherData} />}
-            {weatherData && <WeatherForecastSection data={weatherData} />}
+            {weatherData && <WeatherForecastSection forecastData={weatherData} />}
 
         </div>
     );

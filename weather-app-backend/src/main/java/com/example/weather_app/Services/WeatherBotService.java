@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -67,7 +68,22 @@ public class WeatherBotService extends TelegramLongPollingBot {
 
     // Weather data has been requested
     private void handleCallbackQuery(CallbackQuery callbackQuery) {
+        String location = callbackQuery.getData();
+        long chatId = callbackQuery.getMessage().getChatId();
+        String messageId = callbackQuery.getId();
 
+        // Acknowledge the callback query
+        try {
+            execute(AnswerCallbackQuery.builder()
+                .callbackQueryId(messageId)
+                .text("Fetching weather data for " + location + "...")
+                .build());
+        } catch (TelegramApiException tae) {
+            logger.error("WeatherBotService - Error acknoledging callback query: " , tae);
+        }
+
+        // Fetch and send the data
+        fetchAndSendWeatherData(chatId, location);
     }
 
     private void sendWelcomeMessage(long chatId) {
@@ -96,7 +112,7 @@ public class WeatherBotService extends TelegramLongPollingBot {
 
         // Add buttons for common/popular locations
         keyboard.add(Arrays.asList(
-            createLocationButton()
+            createLocationButton("London")
         ));
 
         markup.setKeyboard(keyboard);
@@ -125,8 +141,12 @@ public class WeatherBotService extends TelegramLongPollingBot {
         }
     }
 
-    private InlineKeyboardButton createLocationButton() {
-                
+    private void fetchAndSendWeatherData(long chatId, String location) {
+        
+    }
+
+    private InlineKeyboardButton createLocationButton(String label) {
+
     }
 
 }

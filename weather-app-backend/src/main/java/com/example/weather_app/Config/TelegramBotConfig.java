@@ -18,8 +18,4 @@ public class TelegramBotConfig {
 
         return api;
     }
-
-    
-
-
 }

@@ -17,22 +17,33 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import com.example.weather_app.Config.TelegramBotConfig;
 import com.example.weather_app.Config.TelegramConfig;
+import com.example.weather_app.Models.WeatherData;
 
 @Component
 public class WeatherBotService extends TelegramLongPollingBot {
 
     private final WeatherService weatherService;
-    private final TelegramBotConfig telegramBotConfig;
+    private final WeatherMessageFormatter weatherMessageFormatter;
     private final TelegramConfig telegramConfig;
     private final Logger logger = LoggerFactory.getLogger(WeatherBotService.class);
 
+    // Constanst for bot commands
+    private static final String START_COMMAND = "/start";
+    private static final String HELP_COMMAND = "/help";
+    private static final String SEARCH_COMMAND = "/search";
+
+    // List of popular cities
+    private static final List<String> POPULAR_CITIES = Arrays.asList(
+        "London", "Manchester", "New York", "Tokyo", "Singapore", "Paris", 
+        "Sydney", "Dubai", "Mumbai", "Toronto", "Las Vegas", "Shanghai"
+    );
+
     @Autowired
-    public WeatherBotService(WeatherService weatherService, TelegramBotConfig telegramBotConfig, TelegramConfig telegramConfig) {
+    public WeatherBotService(WeatherService weatherService, WeatherMessageFormatter weatherMessageFormatter, TelegramConfig telegramConfig) {
         super(telegramConfig.getBotToken());
         this.weatherService = weatherService;
-        this.telegramBotConfig = telegramBotConfig;
+        this.weatherMessageFormatter = weatherMessageFormatter;
         this.telegramConfig = telegramConfig;
     }
 
@@ -58,11 +69,23 @@ public class WeatherBotService extends TelegramLongPollingBot {
         String messageText = update.getMessage().getText();
         long chatId = update.getMessage().getChatId();
 
-        if ("/start".equals(messageText)) { // First-time user interaction
-            sendWelcomeMessage(chatId);
-            sendLocationOptions(chatId);
-        } else if ("/help".equals(messageText)) { // User requesting for help
-            sendHelpMessage(chatId);
+        switch (messageText) {
+            case START_COMMAND:
+                sendWelcomeMessage(chatId);
+                sendLocationOptions(chatId);
+                break;
+            case HELP_COMMAND:
+                sendHelpMessage(chatId);
+                break;
+            case SEARCH_COMMAND:
+                promptForLocationSearch(chatId);
+                break;
+            default:
+                // Checking if the message received from user is a response to a search prompt (promptForLocationSearch)
+                if (isAwaitingLocationInput(chatId)) {
+                    fetchAndSendWeatherData(chatId, messageText);
+                    clearLocationInputState(chatId);
+                }
         }
     }
 
@@ -111,15 +134,33 @@ public class WeatherBotService extends TelegramLongPollingBot {
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
 
         // Add buttons for common/popular locations
-        keyboard.add(Arrays.asList(
-            createLocationButton("London")
-        ));
+        // keyboard.add(Arrays.asList(
+        //     createLocationButton("London")
+        //     // Perhaps add more common locations here
+        // ));
+
+        // Creates rows of 3 buttons each for popular cities
+        for (int i = 0; i < POPULAR_CITIES.size(); i += 3) {
+            List<InlineKeyboardButton> row = new ArrayList<>();
+            for (int j = i; j < Math.min(i + 3, POPULAR_CITIES.size()); j++) {
+                row.add(createLocationButton(POPULAR_CITIES.get(j)));
+            }
+            keyboard.add(row);
+        }
+
+        // Add a search button at the bottom
+        List<InlineKeyboardButton> searchRow = new ArrayList<>();
+        searchRow.add(InlineKeyboardButton.builder()
+            .text("🔍 Search Other Location")
+            .callbackData("SEARCH")
+            .build());
+        keyboard.add(searchRow);
 
         markup.setKeyboard(keyboard);
 
         SendMessage message = SendMessage.builder()
             .chatId(String.valueOf(chatId))
-            .text("Select a location: ")
+            .text("Select a location or search for a specific city: ")
             .replyMarkup(markup)
             .build();
 
@@ -142,11 +183,35 @@ public class WeatherBotService extends TelegramLongPollingBot {
     }
 
     private void fetchAndSendWeatherData(long chatId, String location) {
-        
+        try {
+            // Fetch weather data
+            WeatherData weatherData = weatherService.getWeatherForLocation(location);
+            
+            // Format and send current weather
+            String currentWeatherMessage = weatherMessageFormatter.formatCurrentWeather(weatherData);
+            sendMessage(chatId, currentWeatherMessage);
+
+            // Format and sned daily forecast (3 days)
+            String forecastMessage = weatherMessageFormatter.formatDailyForecast(weatherData);
+            sendMessage(chatId, forecastMessage);
+
+            // Add option to view hourly forecast
+            sendHourlyForecastOption(chatId, location);
+
+        } catch (Exception e) {
+            String errorMessage = "Sorry, I couldn't find weather data for " + location + 
+                ". Please check the spelling or try another location.";
+            
+            sendMessage(chatId, errorMessage);
+            logger.error("Error fetching weather data: ", e);
+        }
     }
 
     private InlineKeyboardButton createLocationButton(String label) {
-
+        return InlineKeyboardButton.builder()
+            .text(label)
+            .callbackData("LOCATION: " + label)
+            .build();
     }
 
 }

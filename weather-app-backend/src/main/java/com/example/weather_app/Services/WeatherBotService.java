@@ -2,7 +2,9 @@ package com.example.weather_app.Services;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +34,8 @@ public class WeatherBotService extends TelegramLongPollingBot {
     private static final String START_COMMAND = "/start";
     private static final String HELP_COMMAND = "/help";
     private static final String SEARCH_COMMAND = "/search";
+    // Track users awaiting location input
+    private final Set<Long> usersAwaitingLocation = new HashSet<>();
 
     // List of popular cities
     private static final List<String> POPULAR_CITIES = Arrays.asList(
@@ -91,22 +95,41 @@ public class WeatherBotService extends TelegramLongPollingBot {
 
     // Weather data has been requested
     private void handleCallbackQuery(CallbackQuery callbackQuery) {
-        String location = callbackQuery.getData();
+        String callbackData = callbackQuery.getData();
         long chatId = callbackQuery.getMessage().getChatId();
         String messageId = callbackQuery.getId();
 
-        // Acknowledge the callback query
+        if ("SEARCH".equals(callbackData)) {
+            promptForLocationSearch(chatId);
+        } else if (callbackData.startsWith("LOCATION:")) {
+            String location = callbackData.substring("LOCATION:".length());
+            fetchAndSendWeatherData(chatId, location);
+        } else if (callbackData.startsWith("HOURLY:")) {
+            String location = callbackData.substring("HOURLY:".length());
+            sendHourlyForecast(chatId,location);
+        }
+
         try {
             execute(AnswerCallbackQuery.builder()
                 .callbackQueryId(messageId)
-                .text("Fetching weather data for " + location + "...")
-                .build());
+                .text("Processing your request...") 
+                .build()
+            );
         } catch (TelegramApiException tae) {
-            logger.error("WeatherBotService - Error acknoledging callback query: " , tae);
+            logger.error("WeatherBotService - Error acknowledging callback: ", tae);
         }
+        // Acknowledge the callback query
+        // try {
+        //     execute(AnswerCallbackQuery.builder()
+        //         .callbackQueryId(messageId)
+        //         .text("Fetching weather data for " + location + "...")
+        //         .build());
+        // } catch (TelegramApiException tae) {
+        //     logger.error("WeatherBotService - Error acknoledging callback query: " , tae);
+        // }
 
         // Fetch and send the data
-        fetchAndSendWeatherData(chatId, location);
+        // fetchAndSendWeatherData(chatId, location);
     }
 
     private void sendWelcomeMessage(long chatId) {
@@ -207,6 +230,65 @@ public class WeatherBotService extends TelegramLongPollingBot {
         }
     }
 
+    private void sendHourlyForecastOption(long chatId, String location) {
+        InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
+
+        keyboard.add(Arrays.asList(
+            InlineKeyboardButton.builder()
+                .text("View Hourly Forecast")
+                .callbackData("HOURLY: " + location)
+                .build()
+        ));
+
+        markup.setKeyboard(keyboard);
+
+        SendMessage message = SendMessage.builder()
+            .chatId(String.valueOf(chatId))
+            .text("Would you like to see the hourly forecast?")
+            .replyMarkup(markup)
+            .build();
+
+        try {
+            execute(message);
+        } catch (TelegramApiException tae) {
+            logger.error("Error sending hourly forecast option: ", tae);
+        }
+    }
+
+    private void sendHourlyForecast(long chatId, String location) {
+        try {
+            WeatherData weatherData = weatherService.getWeatherForLocation(location);
+            String hourlyForecast = weatherMessageFormatter.formatHourlyForecast(weatherData);
+
+            // Splitting the message if it is too long
+            if (hourlyForecast.length() > 4096) {
+                List<String> parts = splitMessage(hourlyForecast);
+                for (String part : parts) {
+                    sendMessage(chatId, part);
+                }
+            } else {
+                sendMessage(chatId, hourlyForecast);
+            }
+        } catch (Exception e) {
+            sendMessage(chatId, "Sorry, I couldn't fetch the hourly forecast right now.");
+            logger.error("WeatherBotService - Error sending hourly forecast: ", e);
+        }
+    }
+
+    // Helper method to split long messages
+    private List<String> splitMessage(String message) {
+        List<String> parts = new ArrayList<>();
+        int maxLength = 4000; // Slightly less than 4096 to be safe
+
+        for (int i = 0; i < message.length(); i += maxLength) {
+            int end = Math.min(i + maxLength, message.length());
+            parts.add(message.substring(i, end));
+        }
+
+        return parts;
+    }
+
     private InlineKeyboardButton createLocationButton(String label) {
         return InlineKeyboardButton.builder()
             .text(label)
@@ -214,4 +296,17 @@ public class WeatherBotService extends TelegramLongPollingBot {
             .build();
     }
 
+    // Methods for managing location input state
+    private void promptForLocationSearch(long chatId) {
+        usersAwaitingLocation.add(chatId);
+        sendMessage(chatId, "Please enter the name of the city you want to check: ");
+    }
+
+    private boolean isAwaitingLocationInput(long chatId) {
+        return usersAwaitingLocation.contains(chatId);
+    }
+
+    private void clearLocationInputState(long chatId) {
+        usersAwaitingLocation.remove(chatId);
+    }
 }
